@@ -1,25 +1,46 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { 
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import ResultsDetail from './ResultsDetail';
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 10
+  },
+
   titleStyle: {
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginLeft: 15,
+    marginBottom: 5
   }
 });
 
-export default ({title, data}) => {
-  console.log(data.length)
+export default withNavigation(({ title, data, navigation }) => {
+  if(!data.length) return null;
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.titleStyle}>{title}</Text>
       <FlatList 
         horizontal
         data={data}
         keyExtractor={res => res.id}
-        renderItem={({item}) => <Text>{item.name}</Text>}
+        renderItem={({item}) => (
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('ResultsShow', { id: item.id })}>
+            <ResultsDetail 
+              result={item} 
+            />
+          </TouchableOpacity>)}
+        showsHorizontalScrollIndicator={false}
 
       />
     </View>
   )
-}
+})
